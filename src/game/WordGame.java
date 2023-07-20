@@ -1,5 +1,6 @@
 package game;
 
+import DictionaryAPI.DictionaryAPIHandler;
 import gui.WordGameGUI;
 
 import javax.swing.*;
@@ -7,6 +8,7 @@ import javax.swing.Timer;
 import java.util.*;
 
 public class WordGame {
+    private DictionaryAPIHandler apiHandler;
     private char currentAlphabet;
     private Set<String> usedWords;
     private Timer timer;
@@ -18,6 +20,7 @@ public class WordGame {
     public WordGame() {
         wordGameGUI = new WordGameGUI();
         setupEventListeners();
+        apiHandler = new DictionaryAPIHandler();
     }
 
     private void setupEventListeners() {
@@ -77,6 +80,12 @@ public class WordGame {
 
         if (usedWords.contains(word)) {
             JOptionPane.showMessageDialog(null, "You already entered this word.");
+            wordGameGUI.getInputField().setText("");
+            return;
+        }
+
+        if (!apiHandler.wordExists(word)) {
+            JOptionPane.showMessageDialog(null, "The word is not valid.");
             wordGameGUI.getInputField().setText("");
             return;
         }
